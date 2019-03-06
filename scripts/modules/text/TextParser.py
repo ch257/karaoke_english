@@ -28,6 +28,16 @@ class TextParser:
 			return '?'
 		elif name == ':':
 			return ':'
+		elif name == "'":
+			return "'"
+		elif name == "’":
+			return "’"
+		elif name == '"':
+			return '"'
+		elif name == "“":
+			return "“"
+		elif name == '”':
+			return '”'
 		else:
 			self.errors.raise_error('Unknown symbol name ' + name)
 		return None
@@ -42,12 +52,34 @@ class TextParser:
 			
 		input_file = Files(self.errors)
 		input_file.open_file(file_path, 'r' ,enc)
+		sep = ''
+		wrd = ''
+		text_elements = []
+		last_smb_type = 's'
 		while not self.errors.error_occured:
 			smb = input_file.read_smb(1)
 			if smb == '':
 				break
 			else:
-				print(smb)
+				if smb in separators:
+					if last_smb_type == 'l':
+						text_elements.append(wrd)
+						wrd = ''
+					sep += smb
+					last_smb_type = 's'
+				else:
+					if last_smb_type == 's':
+						text_elements.append(sep)
+						sep = ''
+					wrd += smb
+					last_smb_type = 'l'
+		if sep != '':
+			text_elements.append(sep)
+		if wrd != '':
+			text_elements.append(wrd)
+			text_elements.append('')
+		
+		print(text_elements)
 			
 			
 			
@@ -64,4 +96,4 @@ class TextParser:
 		# test_file_w.close_file()
 		
 			
-		print(separators)
+		# print(separators)
