@@ -47,7 +47,6 @@ class TextParser:
 		if self.errors.error_occured:
 			return None
 		
-		separators
 		for cnt in range(len(separators)):
 			separators[cnt] = self.name2symbol(separators[cnt])
 			
@@ -57,6 +56,7 @@ class TextParser:
 		wrd = ''
 		self.text_elements = []
 		last_smb_type = 's'
+		smb_cnt = 0
 		while not self.errors.error_occured:
 			smb = input_file.read_smb(1)
 			if smb == '':
@@ -74,6 +74,7 @@ class TextParser:
 						sep = ''
 					wrd += smb
 					last_smb_type = 'l'
+			smb_cnt += 1
 		if sep != '':
 			self.text_elements.append(sep)
 		if wrd != '':
@@ -81,15 +82,28 @@ class TextParser:
 			self.text_elements.append('')
 		input_file.close_file()
 		
+	def combine_subsenteces(self, start_subsentence, end_subsentence):
+		for cnt in range(1, len(self.text_elements), 2):
+			print(self.text_elements[cnt])
+	
 	def parse_text(self, settings):
 		if self.errors.error_occured:
 			return None
-		
+			
 		file_path = settings['input']['file_path']
 		enc = settings['input']['encoding']
-		separators = settings['params']['separators']
+		word_common_separators = settings['params']['word_common_separators']
+		start_subsentence = settings['params']['start_subsentence']
+		end_subsentence = settings['params']['end_subsentence']
+		end_sentence = settings['params']['end_sentence']
 		
-		self.split_text(file_path, enc, separators)
-		for cnt in range(1, len(self.text_elements), 2):
-			print(self.text_elements[cnt])
+		for cnt in range(len(end_subsentence)):
+			end_subsentence[cnt] = self.name2symbol(end_subsentence[cnt])
+			
+		for cnt in range(len(end_sentence)):
+			end_sentence[cnt] = self.name2symbol(end_sentence[cnt])
+		
+		self.split_text(file_path, enc, word_common_separators)
+		self.combine_subsenteces(start_subsentence, end_subsentence)
+		
 		
