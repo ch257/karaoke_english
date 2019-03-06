@@ -13,7 +13,7 @@ class Tools:
 			return None
 		
 		str_array = line.split(sep)
-		
+
 		return str_array
 	
 	def implode(self, str_array, sep=','):
@@ -49,7 +49,7 @@ class Tools:
 		
 		return line
 		
-	def str2type(self, value, value_type):
+	def str2type(self, value, value_type, sep=','):
 		if self.errors.error_occured:
 			return None
 		
@@ -75,25 +75,25 @@ class Tools:
 			return dt.strptime(value, '%H%M%S') #.time()
 			
 		elif value_type == 'str_array':
-			return self.explode(value)
+			return self.explode(value, sep)
 		
 		elif value_type == 'int_array':
 			int_array = []
-			str_array = self.explode(value)
+			str_array = self.explode(value, sep)
 			for s in str_array:
 				int_array.append(int(s))
 			return int_array
 		
 		elif value_type == 'num_array' or value_type == 'float_array':
 			float_array = []
-			str_array = self.explode(value)
+			str_array = self.explode(value, sep)
 			for s in str_array:
 				float_array.append(float(s))
 			return float_array
 		
 		elif value_type == 'bool_array':
 			bool_array = []
-			str_array = self.explode(value)
+			str_array = self.explode(value, sep)
 			for s in str_array:
 				if value == '1':
 					bool_array.append(True)
@@ -209,7 +209,6 @@ class Tools:
 				table[cell_columns[cnt]][rec_cnt] = cell_values[cnt]
 				
 	def escape_sequence(self, seq):
-			
 		if seq == "'\\t'":
 			seq = seq.replace("'\\t'", '\t')
 		elif seq == "','":
