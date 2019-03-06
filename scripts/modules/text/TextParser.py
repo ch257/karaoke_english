@@ -80,6 +80,7 @@ class TextParser:
 			text_elements.append('')
 		input_file.close_file()
 		
-		print(text_elements)
+		for cnt in range(1, len(text_elements), 2):
+			print(text_elements[cnt])
 		
 		
