@@ -17,12 +17,24 @@ class TextParser:
 			return '\t'
 		elif name == 'n':
 			return '\n'
+		elif name == '.”':
+			return '.”'
+		elif name == '...”':
+			return '...”'
+		elif name == '...':
+			return '...'
 		elif name == '.':
 			return '.'
+		elif name == ',”':
+			return ',”'
 		elif name == ',':
 			return ','
 		elif name == 'semicolon':
 			return ';'
+		elif name == '!”':
+			return '!”'
+		elif name == '?”':
+			return '?”'
 		elif name == '!':
 			return '!'
 		elif name == '?':
@@ -89,32 +101,45 @@ class TextParser:
 				return True
 		return False
 			
-			
-	def combine_subsenteces(self, start_subsentence, end_subsentence):
+	def clear_end_subsentence(self, sep, separators): 		
+		for cnt in range(len(separators)):
+			if separators[cnt] in sep:
+				sep = sep.replace(separators[cnt], '').lstrip(' \t')
+				break
+		return sep
+		
+	def remain_end_subsentence(self, sep, separators): 		
+		for cnt in range(len(separators)):
+			if separators[cnt] in sep:
+				sep = separators[cnt]
+				break
+		return sep
+		
+	def combine_subsentences(self, start_subsentence, end_subsentence):
 		subsentence_is_started = False
 		subsentence = ''
 		subsentences = []
 		for cnt in range(1, len(self.text_elements), 2):
 			wrd = self.text_elements[cnt]
-			after_sep = self.text_elements[cnt + 1]
-			befor_sep = self.text_elements[cnt - 1]
+			after_sep = self.text_elements[cnt + 1].replace('\n', '')
+			before_sep = self.text_elements[cnt - 1].replace('\n', '')
 			if subsentence_is_started:
-				subsentence += befor_sep + wrd
+				subsentence += before_sep + wrd
 				if self.separator_is_match(after_sep, end_subsentence):
-					print(subsentence + after_sep)
+					print(subsentence + self.remain_end_subsentence(after_sep, end_subsentence))
 					subsentence = ''
 					subsentence_is_started = False
 					
 			else:
-				subsentence += befor_sep + wrd
+				subsentence += self.clear_end_subsentence(before_sep, end_subsentence) + wrd
 				subsentence_is_started = True
 				if self.separator_is_match(after_sep, end_subsentence):
-					print(subsentence + after_sep)
+					print(subsentence + self.remain_end_subsentence(after_sep, end_subsentence))
 					subsentence = ''
 					subsentence_is_started = False
 					
 			
-			# print(self.text_elements[cnt])
+		
 	
 	def parse_text(self, settings):
 		if self.errors.error_occured:
@@ -134,6 +159,6 @@ class TextParser:
 			end_sentence[cnt] = self.name2symbol(end_sentence[cnt])
 		
 		self.split_text(file_path, enc, word_common_separators)
-		self.combine_subsenteces(start_subsentence, end_subsentence)
-		
+		self.combine_subsentences(start_subsentence, end_subsentence)
+		# print(self.text_elements)
 		
