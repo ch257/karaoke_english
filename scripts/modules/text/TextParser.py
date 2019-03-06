@@ -78,22 +78,8 @@ class TextParser:
 		if wrd != '':
 			text_elements.append(wrd)
 			text_elements.append('')
-		
-		print(text_elements)
-			
-			
-			
 		input_file.close_file()
 		
-		# test_file_r = Files(self.errors)
-		# test_file_w = Files(self.errors)
-		# test_file_r.open_file('data/in/test_r.txt', 'r')
-		# test_file_w.open_file('data/in/test_w.txt', 'w')
-		# smb = test_file_r.read_smb(1)
-		# print(smb == '\n')
-		# test_file_w.write_line(smb)
-		# test_file_r.close_file()
-		# test_file_w.close_file()
+		print(text_elements)
 		
-			
-		# print(separators)
+		
