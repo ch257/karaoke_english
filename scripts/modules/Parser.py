@@ -37,10 +37,10 @@ class Parser:
 		# print(self.settings)
 		text_parser = TextParser(self.errors)
 
-		input_file_name = self.settings['input']['file_path']
-		enc = self.settings['input']['encoding']
-		params = self.settings['params']
-		text_parser.parse(input_file_name, enc, params)
+		# input_file_name = self.settings['input']['file_path']
+		# enc = self.settings['input']['encoding']
+		# params = self.settings['params']
+		text_parser.parse_text(self.settings)
 		
 		if self.errors.error_occured:
 			self.errors.print_errors()
