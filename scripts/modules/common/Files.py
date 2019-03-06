@@ -27,6 +27,13 @@ class Files:
 		line = self.handler.readline()
 		return line
 	
+	def read_smb(self, number):
+		if self.errors.error_occured:
+			return None
+		
+		smb = self.handler.read(number)
+		return smb
+	
 	def write_line(self, line):
 		if self.errors.error_occured:
 			return None
