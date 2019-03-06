@@ -82,9 +82,39 @@ class TextParser:
 			self.text_elements.append('')
 		input_file.close_file()
 		
+	def separator_is_match(self, sep, separators):
+		for cnt in range(len(separators)):
+			if separators[cnt] in sep:
+				# print([sep], separators, cnt)
+				return True
+		return False
+			
+			
 	def combine_subsenteces(self, start_subsentence, end_subsentence):
+		subsentence_is_started = False
+		subsentence = ''
+		subsentences = []
 		for cnt in range(1, len(self.text_elements), 2):
-			print(self.text_elements[cnt])
+			wrd = self.text_elements[cnt]
+			sep = self.text_elements[cnt + 1]
+			if subsentence_is_started:
+				if self.separator_is_match(sep, end_subsentence):
+					print(subsentence)
+					subsentence = ''
+					subsentence_is_started = False
+				else:
+					subsentence += wrd
+					
+			else:
+				subsentence += wrd
+				subsentence_is_started = True
+				if self.separator_is_match(sep, end_subsentence):
+					print(subsentence)
+					subsentence = ''
+					subsentence_is_started = False
+					
+			
+			# print(self.text_elements[cnt])
 	
 	def parse_text(self, settings):
 		if self.errors.error_occured:
