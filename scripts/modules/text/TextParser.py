@@ -96,20 +96,20 @@ class TextParser:
 		subsentences = []
 		for cnt in range(1, len(self.text_elements), 2):
 			wrd = self.text_elements[cnt]
-			sep = self.text_elements[cnt + 1]
+			after_sep = self.text_elements[cnt + 1]
+			befor_sep = self.text_elements[cnt - 1]
 			if subsentence_is_started:
-				if self.separator_is_match(sep, end_subsentence):
-					print(subsentence)
+				subsentence += befor_sep + wrd
+				if self.separator_is_match(after_sep, end_subsentence):
+					print(subsentence + after_sep)
 					subsentence = ''
 					subsentence_is_started = False
-				else:
-					subsentence += wrd
 					
 			else:
-				subsentence += wrd
+				subsentence += befor_sep + wrd
 				subsentence_is_started = True
-				if self.separator_is_match(sep, end_subsentence):
-					print(subsentence)
+				if self.separator_is_match(after_sep, end_subsentence):
+					print(subsentence + after_sep)
 					subsentence = ''
 					subsentence_is_started = False
 					
