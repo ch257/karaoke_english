@@ -30,7 +30,7 @@ class Parser:
 		self.settings['input']['file_path'] = self.ini_parser.get_param('input', 'file_path')
 		self.settings['input']['encoding'] = self.ini_parser.get_param('input', 'encoding')
 		self.settings['params']['word_common_separators'] = self.ini_parser.get_param('params', 'word_common_separators', param_type='str_array', sep='\\')
-		self.settings['params']['start_subsentence'] = self.ini_parser.get_param('params', 'word_common_separators', param_type='str_array')
+		self.settings['params']['start_subsentence'] = self.ini_parser.get_param('params', 'start_subsentence', param_type='str_array')
 		self.settings['params']['end_subsentence'] = self.ini_parser.get_param('params', 'end_subsentence', param_type='str_array', sep='\\')
 		self.settings['params']['end_sentence'] = self.ini_parser.get_param('params', 'end_sentence', param_type='str_array', sep='\\')
 		
