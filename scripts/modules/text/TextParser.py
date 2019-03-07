@@ -142,7 +142,8 @@ class TextParser:
 	def combine_subsentences(self, start_subsentence, end_subsentence, end_sentence):
 		subsentence_is_started = False
 		subsentence = ''
-		subsentences = []
+		subsentences = {}
+		subsentence_cnt = 0
 		wrd_cnt = 0
 		for cnt in range(1, len(self.text_elements), 2):
 			wrd = self.text_elements[cnt]
@@ -151,12 +152,22 @@ class TextParser:
 			if subsentence_is_started:
 				if self.separator_is_match(wrd, start_subsentence): 
 					if wrd_cnt > 1:
-						print(wrd_cnt, subsentence)
+						# print(wrd_cnt, subsentence)
+						subsentences[subsentence_cnt] = {
+							'subsentence': subsentence
+						}
+						subsentence_cnt	+= 1
 						subsentence = wrd
 						wrd_cnt = 1
 					if self.separator_is_match(after_sep, end_subsentence):
 						if wrd_cnt > 1 or self.separator_is_match(after_sep, end_sentence):
-							print(wrd_cnt, subsentence + self.remain_end_subsentence(after_sep, end_subsentence))
+							after_sep = self.remain_end_subsentence(after_sep, end_subsentence)
+							subsentence = subsentence + after_sep
+							subsentences[subsentence_cnt] = {
+								'subsentence': subsentence
+							}
+							# print(wrd_cnt, subsentence + self.remain_end_subsentence(after_sep, end_subsentence))
+							subsentence_cnt	+= 1
 							subsentence = ''
 							wrd_cnt = 0
 							subsentence_is_started = False
@@ -164,8 +175,14 @@ class TextParser:
 					subsentence += before_sep + wrd
 					wrd_cnt += 1
 					if self.separator_is_match(after_sep, end_subsentence):
-						if wrd_cnt > 1 or self.separator_is_match(after_sep, end_sentence):#####
-							print(wrd_cnt, subsentence + self.remain_end_subsentence(after_sep, end_subsentence))
+						if wrd_cnt > 1 or self.separator_is_match(after_sep, end_sentence):
+							after_sep = self.remain_end_subsentence(after_sep, end_subsentence)
+							subsentence = subsentence + after_sep
+							subsentences[subsentence_cnt] = {
+								'subsentence': subsentence
+							}
+							# print(wrd_cnt, subsentence + self.remain_end_subsentence(after_sep, end_subsentence))
+							subsentence_cnt	+= 1
 							subsentence = ''
 							wrd_cnt = 0
 							subsentence_is_started = False
@@ -176,11 +193,18 @@ class TextParser:
 				subsentence_is_started = True
 				if self.separator_is_match(after_sep, end_subsentence):
 					if wrd_cnt > 1 or self.separator_is_match(after_sep, end_sentence):
-						print(wrd_cnt, subsentence + self.remain_end_subsentence(after_sep, end_subsentence))
+						after_sep = self.remain_end_subsentence(after_sep, end_subsentence)
+						subsentence = subsentence + after_sep
+						subsentences[subsentence_cnt] = {
+							'subsentence': subsentence
+						}
+						# print(wrd_cnt, subsentence + self.remain_end_subsentence(after_sep, end_subsentence))
+						subsentence_cnt	+= 1
 						subsentence = ''
 						wrd_cnt = 0
 						subsentence_is_started = False
-					
+			
+		print(subsentences)	
 			
 		
 	
