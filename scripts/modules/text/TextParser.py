@@ -157,14 +157,16 @@ class TextParser:
 			before_sep = self.text_elements[cnt - 1].replace('\n', '')
 			if subsentence_is_started:
 				if self.separator_is_match2(wrd, start_subsentence): 
-					print(subsentence + self.remain_end_subsentence(after_sep, end_subsentence))
+					print(subsentence)
 					subsentence = wrd
-					# print('!!!!!!!!!!!!!!!!!!!!!!!!')
-					pass
+					if self.separator_is_match(after_sep, end_subsentence):
+						print(subsentence + self.remain_end_subsentence(after_sep, end_subsentence))
+						subsentence = ''
+						subsentence_is_started = False
 				else:
 					subsentence += before_sep + wrd
 					if self.separator_is_match(after_sep, end_subsentence):
-						# print(subsentence + self.remain_end_subsentence(after_sep, end_subsentence))
+						print(subsentence + self.remain_end_subsentence(after_sep, end_subsentence))
 						subsentence = ''
 						subsentence_is_started = False
 					
@@ -172,7 +174,7 @@ class TextParser:
 				subsentence += self.clear_end_subsentence(before_sep, end_subsentence) + wrd
 				subsentence_is_started = True
 				if self.separator_is_match(after_sep, end_subsentence):
-					# print(subsentence + self.remain_end_subsentence(after_sep, end_subsentence))
+					print(subsentence + self.remain_end_subsentence(after_sep, end_subsentence))
 					subsentence = ''
 					subsentence_is_started = False
 					
