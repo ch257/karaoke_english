@@ -150,23 +150,30 @@ class TextParser:
 			after_sep = self.text_elements[cnt + 1].replace('\n', '')
 			before_sep = self.text_elements[cnt - 1].replace('\n', '')
 			if subsentence_is_started:
-				if self.separator_is_match(wrd, start_subsentence): 
+				if self.separator_is_match(wrd, start_subsentence):
 					if wrd_cnt > 1:
-						# print(wrd_cnt, subsentence)
 						subsentences[subsentence_cnt] = {
-							'subsentence': subsentence
+							'subsentence': subsentence,
+							'text_element_idx': cnt - 2 * wrd_cnt + 2,
+							'wrd_cnt': wrd_cnt
 						}
+						# print(wrd_cnt, subsentence)
 						subsentence_cnt	+= 1
 						subsentence = wrd
 						wrd_cnt = 1
+					else:
+						subsentence += before_sep + wrd
+						wrd_cnt += 1
 					if self.separator_is_match(after_sep, end_subsentence):
 						if wrd_cnt > 1 or self.separator_is_match(after_sep, end_sentence):
 							after_sep = self.remain_end_subsentence(after_sep, end_subsentence)
-							subsentence = subsentence + after_sep
+							subsentence += after_sep
 							subsentences[subsentence_cnt] = {
-								'subsentence': subsentence
+								'subsentence': subsentence,
+								'text_element_idx': cnt - 2 * wrd_cnt + 2,
+								'wrd_cnt': wrd_cnt
 							}
-							# print(wrd_cnt, subsentence + self.remain_end_subsentence(after_sep, end_subsentence))
+							# print(wrd_cnt, subsentence)
 							subsentence_cnt	+= 1
 							subsentence = ''
 							wrd_cnt = 0
@@ -177,11 +184,13 @@ class TextParser:
 					if self.separator_is_match(after_sep, end_subsentence):
 						if wrd_cnt > 1 or self.separator_is_match(after_sep, end_sentence):
 							after_sep = self.remain_end_subsentence(after_sep, end_subsentence)
-							subsentence = subsentence + after_sep
+							subsentence += after_sep
 							subsentences[subsentence_cnt] = {
-								'subsentence': subsentence
+								'subsentence': subsentence,
+								'text_element_idx': cnt - 2 * wrd_cnt + 2,
+								'wrd_cnt': wrd_cnt
 							}
-							# print(wrd_cnt, subsentence + self.remain_end_subsentence(after_sep, end_subsentence))
+							# print(wrd_cnt, subsentence)
 							subsentence_cnt	+= 1
 							subsentence = ''
 							wrd_cnt = 0
@@ -196,18 +205,53 @@ class TextParser:
 						after_sep = self.remain_end_subsentence(after_sep, end_subsentence)
 						subsentence = subsentence + after_sep
 						subsentences[subsentence_cnt] = {
-							'subsentence': subsentence
+							'subsentence': subsentence,
+							'text_element_idx': cnt - 2 * wrd_cnt + 2,
+							'wrd_cnt': wrd_cnt
 						}
-						# print(wrd_cnt, subsentence + self.remain_end_subsentence(after_sep, end_subsentence))
+						# print(wrd_cnt, subsentence)
 						subsentence_cnt	+= 1
 						subsentence = ''
 						wrd_cnt = 0
 						subsentence_is_started = False
 			
-		print(subsentences)	
-			
+		##################################
+		for _idx in subsentences:
+			# if subsentences[_idx]['text_element_idx'] < 643 and subsentences[_idx]['text_element_idx'] > 599: 
+			if subsentences[_idx]['wrd_cnt'] < 2:
+				if not self.separator_is_match(self.text_elements[subsentences[_idx]['text_element_idx'] - 1], end_sentence):
+					subsentence_is_started = False
+					wrd_cnt = 0
+					subsentence = ''
+					start_cnt = subsentences[_idx - 1]['text_element_idx']
+					wrd_length = subsentences[_idx - 1]['wrd_cnt'] + subsentences[_idx]['wrd_cnt']
+					stop_cnt = start_cnt + wrd_length * 2
+					for cnt in range(start_cnt, stop_cnt, 2):
+						wrd = self.text_elements[cnt]
+						after_sep = self.text_elements[cnt + 1].replace('\n', '')
+						before_sep = self.text_elements[cnt - 1].replace('\n', '')
+						if subsentence_is_started:
+							subsentence += before_sep + wrd
+							wrd_cnt += 1
+						else:
+							subsentence += self.clear_end_subsentence(before_sep, end_subsentence) + wrd
+							wrd_cnt += 1
+							subsentence_is_started = True
+						
+					after_sep = self.remain_end_subsentence(after_sep, end_subsentence)
+					subsentence = subsentence + after_sep
+					subsentences[_idx] = {
+						'subsentence': subsentence,
+						'text_element_idx': cnt - 2 * wrd_cnt + 2,
+						'wrd_cnt': wrd_cnt
+					}
+					subsentences[_idx-1] = subsentences[_idx]
+					# print(subsentences[_idx-1]['text_element_idx'], subsentences[_idx-1]['wrd_cnt'], subsentences[_idx-1]['subsentence'])	
+					# print(subsentences[_idx]['text_element_idx'], subsentences[_idx]['wrd_cnt'], subsentences[_idx]['subsentence'])	
+						
+		for _idx in subsentences:
+			print(_idx, subsentences[_idx]['text_element_idx'], subsentences[_idx]['wrd_cnt'], subsentences[_idx]['subsentence'])	
 		
-	
 	def parse_text(self, settings):
 		if self.errors.error_occured:
 			return None
